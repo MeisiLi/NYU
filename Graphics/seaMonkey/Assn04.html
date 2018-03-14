@@ -1,0 +1,226 @@
+<script src=lib2.js></script>
+
+<body bgcolor=black text=white link=white alink=white vlink=white>
+<center>
+<canvas id='canvas1' width=400 height=400></canvas>
+</center>
+</body>
+
+<script id='my_vertex_shader' type='x-shader/x-vertex'>
+   attribute vec3 aPos;
+   varying   vec3 vPos;
+   void main() {
+      gl_Position = vec4(aPos, 1.);
+      vPos = aPos;
+   }
+</script>
+
+<script id='my_fragment_shader' type='x-shader/x-fragment'>
+varying vec3 vPos;
+uniform float uTime;
+vec3 LDir = normalize(vec3(1.,1.,1.));
+
+mat4 m[5];  // array martix
+
+vec4 translateT(mat4 m, vec4 ang){
+  return m * ang;
+}
+
+// translate affect direction
+vec4 transT(mat4 m, vec4 ang){
+  return m * ang;
+}
+
+// scale transformation
+vec4 scaling(mat4 m, vec4 ang){
+  return m * ang;
+}
+
+// rotate x
+vec4 rotateX(mat4 m, vec4 ang){
+  m[1][1] = 2. * cos(uTime)*m[1][1];
+  m[1][2] = -10. * sin(uTime)*m[1][2];
+  m[2][1] = 10. * sin(uTime)*m[2][1];
+  m[2][2] = 2. * cos(uTime)*m[2][2];
+  return m * ang;
+}
+
+// rotate y
+vec4 rotateY(mat4 m, vec4 ang){
+  m[0][0] = -2. * cos(uTime)*m[0][0];
+  m[2][0] = -10. * sin(uTime)*m[2][0];
+  m[0][2] = 10. * sin(uTime)*m[0][2];
+  m[2][2] = -2. * cos(uTime)*m[2][2];
+  return m * ang;
+}
+
+// rotate z
+vec4 rotateZ(mat4 m, vec4 ang){
+  m[0][0] = 2. * cos(uTime)*m[0][0];
+  m[1][0] = 10. * sin(uTime)*m[1][0];
+  m[0][1] = -10. * sin(uTime)*m[0][1];
+  m[1][1] = 2. * cos(uTime)*m[1][1];
+  return m * ang;
+}
+
+vec4 rotateAll(mat4 m, vec4 ang){
+  m[0][0] = 10. * cos(uTime)*m[0][0];
+  m[0][1] = 20. * sin(uTime)*m[0][1];
+  m[0][2] = 10. * sin(uTime)*m[0][2];
+  m[1][0] = 10. * sin(uTime)*m[1][0];
+  m[1][1] = 20. * cos(uTime)*m[1][1];
+  m[1][2] = 10. * sin(uTime)*m[1][2];
+  m[2][0] = .5 * sin(uTime)*m[2][0];
+  m[2][1] = .5 * sin(uTime)*m[2][1];
+  m[2][2] = 1.8 * cos(uTime)*m[2][2];
+  return m * ang;
+}
+
+vec3 sphere(vec3 V, vec3 W, vec4 S, vec3 color) {
+   vec3 v = V;
+   V -= S.xyz;
+   float B = 2. * dot(V, W);
+   float C = dot(V, V) - S.w * S.w;
+   vec2 t;
+   float discrim = B*B - 4.*C;
+   if( discrim < 0.){
+        t = vec2(-1., -1.);
+   } else {
+        t = vec2(-B - discrim, -B + discrim)/2.;
+   }
+   if (t.x > 0.) {
+      vec3 P = v + t.x * W;
+      vec3 N = normalize(P - S.xyz);
+      float brightness = max(0., dot(N, LDir));
+      brightness = mix(.1, brightness, .5);
+      color = vec3(.1,1.,.1) * brightness;
+   }
+   return color;
+}
+void main(){
+    // identify transformation
+    m[0]= mat4(-4., 1.5, 0., 0.,
+              1.5, -4., 0., 0.,
+              0., 0., 1., 0.,
+              0., 0., 0., 1.);
+    m[1]= mat4(0., 0., 0., 0.,
+              0., 0., 0., 0.,
+              0., 0., .5, 0.,
+              0., 0., 0., 1.);
+    m[2]= mat4(1., 0., 0., 0.,
+              0., 1., 0., 0.,
+              0., 0., 1., 0.,
+              0., 0., 0., 1.);
+    m[3]= mat4(1., 0., 0., 0.,
+              0., 1., 0., 0.,
+              0., 0., 1., 0.,
+              0., 0., 0., 1.);
+    m[4]= mat4(1., 1., 1., 0.,
+              1., 1., 1., 0.,
+              1., 1., 1., 0.,
+              0., 0., 0., 1.);
+
+    // blue backgroundColor
+    vec3 color = vec3(.15, .15, .5);
+
+    vec3 V = vec3(0., 0., 0.);
+    // ray direction
+    vec3 W = normalize(vec3(vPos.xy, -3.));
+    //x, y, z, r, origin
+    vec4 S = vec4(0.5, 0.6, -6., .25);
+    // translate point
+    vec4 s1 = translateT(m[0], S);
+
+    // enlarge the size
+    vec4 s2 = scaling(m[1], s1);
+
+    // rotate
+    vec4 s3 = rotateX(m[2], S);
+    vec4 s4 = rotateY(m[3], s1);
+    s4 += rotateZ(m[3], s1);
+    vec4 s5 = rotateAll(m[4], s2);
+
+
+    // Ray trace sphere
+    color = sphere(V, W, S, color);
+    color = sphere(V, W, s3, color);
+    color = sphere(V, W, s1, color
+                +vec3(2., 0., 0.));
+    color = sphere(V, W, s4, color);
+    color = sphere(V, W, s2, color
+                +vec3(0., 0., 0.01));
+    color = sphere(V, W, s5, color*2.);
+
+    gl_FragColor = vec4(sqrt(color), 1.0);
+}
+
+</script>
+
+<script id='instructions' type='text/html'><font color=#b0b0b0>
+<b>Description</b>
+<p>
+</script>
+
+<font color=#b0b0b0><font size=5>
+<b>Description</b>
+<p>
+First of all, I make a basic sphere S(top-right).<p>
+Then, create a matrix array m and define all m in the array in main function.<p>
+After that, write down transformation functions(translate, rotate, scale).<p>
+Get a new sphere(s1) transformed by a point in translate function. This code does not use the transT function to transform by a direction.<p>
+And enlarge the sphere s1 and center this sphere(s2).<p>
+Finally, let the S rotate by x(s3), s1 rotate by y(s4).<p>
+And s1 also use rotateZ funtion. s2 is trying to change col1 to col3.<p>
+Some command show on the code to help to understand my code.<p>
+
+<script>
+var vs = my_vertex_shader.innerHTML,
+    fs = my_fragment_shader.innerHTML;
+    fs = fs.substring(1, fs.length);
+
+document.body.innerHTML = [''
+   ,'<center><font size=6 color=#b0b0b0>Matrixs operation in five spheres</center>'
+   ,'<TABLE cellspacing=0 cellpadding=0><TR>'
+   ,'<td width=50></td><td><font color=red size=5><div id=errorMessage>&nbsp;</div></font></td>'
+   ,'</TR><TR>'
+   ,'<table cellspacing=10>'
+   ,'<tr>'
+   ,'<td valign=top><font size=2 color=red><div id=errorMarker>&nbsp;</div></font></td>'
+   ,'<td valign=top>'
+   ,'<textArea id=textArea spellcheck=false '
+   ,'style="font:16px courier;outline-width:0;border-style:none;resize:none;overflow:scroll;"'
+   ,'></textArea>'
+   ,'</td><td valign=top>' + document.body.innerHTML + '</td>'
+   //,'<td valign=bottom><font size=5>' + instructions.innerHTML + '</td>'
+   ,'</tr></table>'
+   ,'</TR></TABLE>'
+   ].join('');
+
+var i, text = fs.split('\n'), cols = 0;
+for (i = 0 ; i < text.length ; i++)
+   cols = Math.max(cols, text[i].length);
+
+textArea.rows = text.length;
+textArea.cols = cols;
+textArea.value = fs;
+textArea.style.backgroundColor = '#202020';
+textArea.style.color = 'white';
+textArea.onkeyup = function() { canvas1.setShaders(vs, this.value); }
+
+var startTime = Date.now();
+
+function animate(gl) {
+   let time = (Date.now() - startTime) / 1000;
+   setUniform('1f', 'uTime', time);
+
+   // EXAMPLE OF SETTING UNIFORM SHADER VARIABLE uMat
+
+   let z = 10 * Math.sin(2 * time);
+   setUniform('Matrix4fv', 'uMat', false, [ 1, 0, 0, 0,
+                                            0, 1, 0, 0,
+					                                  0, 0, 1, 0,
+					                                 .1, 0, z, 1]);
+}
+
+gl_start(canvas1, vs, fs);
+</script>
