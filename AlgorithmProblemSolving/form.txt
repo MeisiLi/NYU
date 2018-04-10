@@ -26,6 +26,7 @@ using namespace std;
 #define IEF(i, s, t)    for(i=(s); i<(t); i++)
 #define NEF(i, s, t)    for(i=(s); i!=(t); i++)
 #define MAXN 100000
+#define INF (int)1e9
 
 int main(){
     ios_base::sync_with_stdio(false);
