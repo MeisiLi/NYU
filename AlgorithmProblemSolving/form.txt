@@ -1,0 +1,24 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <set>
+#include <map>
+#include <sstream>
+#include <complex>
+#include <ctime>
+#include <cassert>
+#include <functional>
+#include <list>
+using namespace std;
+
+int main(){
+    ios_base::sync_with_stdio(false);
+    
+    return 0;
+}
