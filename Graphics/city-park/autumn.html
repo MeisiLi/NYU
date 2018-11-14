@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Autumn</title>
+    <meta name="description" content="Autumn">
+    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+    <script src="https://rawgit.com/takahirox/aframe-rain/master/build/aframe-rain.min.js"></script>
+  </head>
+
+  <body>
+    <a-scene>
+
+      <a-assets>
+        <img id="bg" src="images/autumnImage.jpg">
+
+        <a-asset-item id="arch-obj" src="models/arch/archway.obj"></a-asset-item>
+        <a-asset-item id="arch-mtl" src="models/arch/archway.mtl"></a-asset-item>
+        <a-asset-item id="fountain-obj" src="models/fountain/fountain2.obj"></a-asset-item>
+        <a-asset-item id="fountain-mtl" src="models/fountain/fountain2.mtl"></a-asset-item>
+        <a-asset-item id="lamp-obj" src="models/lamp/lamp2.obj"></a-asset-item>
+        <a-asset-item id="lamp-mtl" src="models/lamp/lamp2.mtl"></a-asset-item>
+        <a-asset-item id="bench-obj" src="models/bench/bench3.obj"></a-asset-item>
+        <a-asset-item id="bench-mtl" src="models/bench/bench3.mtl"></a-asset-item>
+
+        <a-asset-item id="building1-obj" src="models/building/1.obj"></a-asset-item>
+        <a-asset-item id="building1-mtl" src="models/building/1.mtl"></a-asset-item>
+        <a-asset-item id="building2-obj" src="models/building/2.obj"></a-asset-item>
+        <a-asset-item id="building2-mtl" src="models/building/2.mtl"></a-asset-item>
+        <a-asset-item id="building3-obj" src="models/building/3.obj"></a-asset-item>
+        <a-asset-item id="building3-mtl" src="models/building/3.mtl"></a-asset-item>
+        <a-asset-item id="building4-obj" src="models/building/4.obj"></a-asset-item>
+        <a-asset-item id="building4-mtl" src="models/building/4.mtl"></a-asset-item>
+        <a-asset-item id="building5-obj" src="models/building/5.obj"></a-asset-item>
+        <a-asset-item id="building5-mtl" src="models/building/5.mtl"></a-asset-item>
+
+        <a-asset-item id="bin-obj" src="models/bin/garbage.obj"></a-asset-item>
+        <a-asset-item id="bin-mtl" src="models/bin/garbage.mtl"></a-asset-item>
+
+        <audio src="sounds/park.wav" autoplay preload></audio>
+      </a-assets>
+
+
+      <a-plane src="#bg" position="0 0.1 -4" rotation="-90 0 0" width="50" height="30" shadow></a-plane>
+      <a-sky color="#ECECEC"></a-sky>
+
+      <a-entity environment="preset: forest; dressingAmount: 100;dressingColor:#F59A44;groundColor:#E3CCA1;groundColor2:#E3CCA1;skyColor:#f4eec3;horizonColor:#d9ecf4; ground: flat; playArea: 50"></a-entity>
+
+      <a-entity obj-model="obj: #arch-obj; mtl: #arch-mtl" scale="0.5 0.8 0.5" rotation="0 90 0" position="20 5 -6"></a-entity>
+
+      <a-entity obj-model="obj: #fountain-obj; mtl: #fountain-mtl" scale="8 6 8" position="-3 1 -5"></a-entity>
+
+      <a-entity obj-model="obj: #lamp-obj; mtl: #lamp-mtl" scale="0.2 0.2 0.2" position="-7 0 0"></a-entity>
+      <a-entity obj-model="obj: #lamp-obj; mtl: #lamp-mtl" scale="0.2 0.2 0.2" position="-8 0 -10"></a-entity>
+      <a-entity obj-model="obj: #lamp-obj; mtl: #lamp-mtl" scale="0.2 0.2 0.2" position="4 0 -1"></a-entity>
+      <a-entity obj-model="obj: #lamp-obj; mtl: #lamp-mtl" scale="0.2 0.2 0.2" position="2.5 0 -11"></a-entity>
+
+      <a-entity obj-model="obj: #bench-obj; mtl: #bench-mtl" rotation="0 45 0" position="6 0.5 6"></a-entity>
+      <a-entity obj-model="obj: #bench-obj; mtl: #bench-mtl" rotation="0 130 0" position="6 0.5 -13"></a-entity>
+      <a-entity obj-model="obj: #bench-obj; mtl: #bench-mtl" rotation="-10 -120 0" position="-15 0.5 -9"></a-entity>
+      <a-entity obj-model="obj: #bench-obj; mtl: #bench-mtl" rotation="0 -45 0" position="-11 0.5 4"></a-entity>
+
+      <a-entity obj-model="obj: #building1-obj; mtl: #building1-mtl" scale="15 15 15" rotation="0 175 0" position="80 0.5 50"></a-entity>
+      <a-entity obj-model="obj: #building2-obj; mtl: #building2-mtl" scale="70 70 50" rotation="0 100 0" position="80 0.5 -40"></a-entity>
+      <a-entity obj-model="obj: #building3-obj; mtl: #building3-mtl" scale="10 10 15" rotation="0 0 0" position="-60 0.5 0"></a-entity>
+      <a-entity obj-model="obj: #building4-obj; mtl: #building4-mtl" scale="15 20 15" rotation="0 0 0" position="100 0.5 20"></a-entity>
+      <a-entity obj-model="obj: #building5-obj; mtl: #building5-mtl" scale="50 80 90" rotation="0 0 0" position="100 0.5 -30"></a-entity>
+      <a-entity obj-model="obj: #building5-obj; mtl: #building5-mtl" scale="60 90 90" rotation="0 0 0" position="100 0.5 50"></a-entity>
+      <a-entity obj-model="obj: #building5-obj; mtl: #building5-mtl" scale="50 80 90" rotation="0 180 0" position="-100 0.5 30"></a-entity>
+      <a-entity obj-model="obj: #building5-obj; mtl: #building5-mtl" scale="50 80 90" rotation="0 180 0" position="-100 0.5 -40"></a-entity>
+
+      <a-entity obj-model="obj: #bin-obj; mtl: #bin-mtl" scale="0.2 0.3 0.2" rotation="0 0 0" position="7 .5 -9"></a-entity>
+      <a-entity obj-model="obj: #bin-obj; mtl: #bin-mtl" scale="0.2 0.3 0.2" rotation="0 180 0" position="-8 0.5 7"></a-entity>
+
+    </a-scene>
+  </body>
+</html>
